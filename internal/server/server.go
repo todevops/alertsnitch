@@ -68,35 +68,33 @@ func (s Server) webhookPost(w http.ResponseWriter, r *http.Request) {
 		log.Println("Received webhook payload", string(body))
 	}
 
-	d, err := webhook.Parse(body)
-	for _, data := range *d {
-		if err != nil {
-			metrics.InvalidWebhooksTotal.Inc()
+	data, err := webhook.Parse(body)
+	if err != nil {
+		metrics.InvalidWebhooksTotal.Inc()
 
-			log.Printf("Invalid payload: %s\n", err)
-			http.Error(w, fmt.Sprintf("Invalid payload: %s", err), http.StatusBadRequest)
-			return
-		}
-
-		if data.Version != SupportedWebhookVersion {
-			metrics.InvalidWebhooksTotal.Inc()
-
-			log.Printf("Invalid payload: webhook version %s is not supported\n", data.Version)
-			http.Error(w, fmt.Sprintf("Invalid payload: webhook version %s is not supported", data.Version), http.StatusBadRequest)
-			return
-		}
-
-		metrics.AlertsReceivedTotal.WithLabelValues(data.Receiver, data.Status).Add(float64(len(data.Alerts)))
-
-		if err = s.db.Save(&data); err != nil {
-			metrics.AlertsSavingFailuresTotal.WithLabelValues(data.Receiver, data.Status).Add(float64(len(data.Alerts)))
-
-			log.Printf("failed to save alerts: %s\n", err)
-			http.Error(w, fmt.Sprintf("failed to save alerts: %s", err), http.StatusInternalServerError)
-			return
-		}
-		metrics.AlertsSavedTotal.WithLabelValues(data.Receiver, data.Status).Add(float64(len(data.Alerts)))
+		log.Printf("Invalid payload: %s\n", err)
+		http.Error(w, fmt.Sprintf("Invalid payload: %s", err), http.StatusBadRequest)
+		return
 	}
+
+	if data.Version != SupportedWebhookVersion {
+		metrics.InvalidWebhooksTotal.Inc()
+
+		log.Printf("Invalid payload: webhook version %s is not supported\n", data.Version)
+		http.Error(w, fmt.Sprintf("Invalid payload: webhook version %s is not supported", data.Version), http.StatusBadRequest)
+		return
+	}
+
+	metrics.AlertsReceivedTotal.WithLabelValues(data.Receiver, data.Status).Add(float64(len(data.Alerts)))
+
+	if err = s.db.Save(data); err != nil {
+		metrics.AlertsSavingFailuresTotal.WithLabelValues(data.Receiver, data.Status).Add(float64(len(data.Alerts)))
+
+		log.Printf("failed to save alerts: %s\n", err)
+		http.Error(w, fmt.Sprintf("failed to save alerts: %s", err), http.StatusInternalServerError)
+		return
+	}
+	metrics.AlertsSavedTotal.WithLabelValues(data.Receiver, data.Status).Add(float64(len(data.Alerts)))
 
 }
 

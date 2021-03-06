@@ -24,13 +24,11 @@ func TestParsingValidPayloadWorks(t *testing.T) {
 
 	a.NoError(err)
 
-	data, err := webhook.Parse(b)
+	d, err := webhook.Parse(b)
 
 	a.NoError(err)
-	a.NotNil(data)
+	a.NotNil(d)
 
-	for _, d := range *data {
-		a.Equal(d.Status, "resolved")
-		a.Equal(d.ExternalURL, "http://alertmanager:9093")
-	}
+	a.Equal(d.Status, "resolved")
+	a.Equal(d.ExternalURL, "http://alertmanager:9093")
 }
