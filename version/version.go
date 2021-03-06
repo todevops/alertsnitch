@@ -6,15 +6,12 @@ import "fmt"
 const Name = "Alertsnitch"
 
 // Version is the application Version
-var Version string
+const Version = "v0.0.1"
 
 // Date is the built date and time
-var Date string
-
-// Commit is the commit in which the package is based
-var Commit string
+const Date = "2021-03-06"
 
 // GetVersion returns the version as a string
 func GetVersion() string {
-	return fmt.Sprintf("%s Version: %s Commit: %s Date: %s", Name, Version, Commit, Date)
+	return fmt.Sprintf("%s \nVersion: %s \nDate: %s", Name, Version, Date)
 }

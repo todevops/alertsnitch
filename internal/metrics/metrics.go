@@ -4,8 +4,6 @@ import (
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
-
-	"github.com/todevops/alertsnitch/version"
 )
 
 var (
@@ -68,8 +66,6 @@ var (
 
 func init() {
 	bootTime.Set(float64(time.Now().Unix()))
-
-	buildInfo.WithLabelValues(version.Version, version.Commit, version.Date).Set(1)
 
 	prometheus.MustRegister(bootTime)
 	prometheus.MustRegister(buildInfo)

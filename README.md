@@ -1,17 +1,8 @@
 # AlertSnitch
 
-Captures Prometheus AlertManager alerts and writes them in a MySQL or
-Postgres database for future examination.
+捕获 Prometheus AlertManager 告警信息，并将它们写入 MySQL 或 Postgres 数据库中
 
-Because given a noisy enough alerting environment, offline querying
-capabilities of triggered alerts is extremely valuable.
-
-## How does it work
-
-1. You stand up one of these however you like (multi-arch Docker images provided)
-1. You setup AlertManager to point at it and propagate your alerts in.
-1. Every alert that gets triggered reaches your database.
-1. Profit.
+## 它是如何工作的
 
 ```mermaid
 graph TD
@@ -25,31 +16,27 @@ graph TD
     style G fill:#00C000
 ```
 
-## Local install
+## 本地安装
 
-Simply install to your $GOPATH using your GO tools
+只需使用 GO 工具安装到您的 $GOPATH
 
 ```sh
 $ go get github.com/todevops/alertsnitch`
 ```
 
-## Requirements
+## 要求
 
-To run AlertSnitch requires a MySQL or Postgres database to write to.
+要运行警报，需要一个MySQL或Postgres数据库来编写。
 
-The database must be initialized with AlertSnitch model.
+数据库必须使用 AlertSnitch 模型进行初始化。
 
-AlertSnitch will not become online until the model is up to date with the
-expected one. Bootstrapping scripts are provided in the [scripts][./script.d]
-folder.
-
-## Configuration
+## 配置
 
 ### MySQL
 
-For specifics about how to set up the MySQL DSN refer to [Go MySQL client driver][1]
+有关如何设置 MySQL DSN 的要点，请参阅 [Go MySQL client driver](https://github.com/go-sql-driver/mysql)
 
-This is a sample of a DSN that would connect to the local host over a Unix socket
+这是通过 Unix 插座连接到本地主机的 DSN 示例：
 
 ```bash
 MYSQL_USER="snitch"
