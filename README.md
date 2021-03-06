@@ -2,19 +2,11 @@
 
 捕获 Prometheus AlertManager 告警信息，并将它们写入 MySQL 或 Postgres 数据库中
 
-## 它是如何工作的
+## 要求
 
-```mermaid
-graph TD
-    A[alertmanager] -->|POST|B(AlertSnitch)
-    B --> |Save|C(MySQL/PG Database)
-    C -.-|Graph|G[Grafana]
-    C -.-|Query|D[MySQL/PG Client]
-    style B fill:#f9f,stroke:#333,stroke-width:1px
-    style C fill:#00A0A0,stroke:#333,stroke-width:1px
-    style D fill:#00C000
-    style G fill:#00C000
-```
+要运行警报，需要一个MySQL或Postgres数据库来编写。
+
+数据库必须使用 AlertSnitch 模型进行初始化。
 
 ## 本地安装
 
@@ -23,12 +15,6 @@ graph TD
 ```sh
 $ go get github.com/todevops/alertsnitch`
 ```
-
-## 要求
-
-要运行警报，需要一个MySQL或Postgres数据库来编写。
-
-数据库必须使用 AlertSnitch 模型进行初始化。
 
 ## 配置
 
